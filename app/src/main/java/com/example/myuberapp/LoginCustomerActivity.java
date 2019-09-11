@@ -43,7 +43,7 @@ public class LoginCustomerActivity extends AppCompatActivity implements View.OnC
             public void onAuthStateChanged(FirebaseAuth firebaseAuth) {
                 FirebaseUser mUser = FirebaseAuth.getInstance().getCurrentUser();
                 if (mUser!=null){
-                    Intent intent = new Intent(LoginCustomerActivity.this, MapActivity.class);
+                    Intent intent = new Intent(LoginCustomerActivity.this, CustomerMapActivity.class);
                     startActivity(intent);
                     finish();
                 }
@@ -51,7 +51,7 @@ public class LoginCustomerActivity extends AppCompatActivity implements View.OnC
         };
 
     }
-
+///
     @Override
     public void onClick(View v) {
         switch (v.getId()){

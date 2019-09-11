@@ -8,6 +8,7 @@
          location permissions for the 'MyLocation' functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -31,8 +32,21 @@
             android:value="@string/google_maps_key" />
 
         <activity
+            android:name=".CustomerMapActivity"
+            android:label="@string/title_activity_customer_map"></activity>
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/.
+        -->
+        <uses-library android:name="com.google.android.maps" />
+
+        <activity
             android:name=".DriverMapActivity"
-            android:label="@string/title_activity_driver_map"></activity>
+            android:label="@string/title_activity_driver_map" />
         <activity android:name=".MapActivity" />
         <activity android:name=".LoginCustomerActivity" />
         <activity android:name=".LoginDriverActivity" />

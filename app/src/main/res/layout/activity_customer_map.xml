@@ -18,5 +18,18 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".DriverMapActivity" />
+        tools:context=".CustomerMapActivity" />
+    <Button
+        android:id="@+id/btn_request"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="call uber"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="20dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#100"
+        />
 </FrameLayout>

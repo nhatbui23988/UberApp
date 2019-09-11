@@ -27,11 +27,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_customer:{
                 Intent intent = new Intent(MainActivity.this, LoginCustomerActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             }
             case R.id.btn_driver:{
                 Intent intent = new Intent(MainActivity.this, LoginDriverActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             }
         }
