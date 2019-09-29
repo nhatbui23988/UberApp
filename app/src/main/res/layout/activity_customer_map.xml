@@ -1,35 +1,209 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
-    <Button
-        android:id="@+id/btn_log_out"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Log out"
-        android:padding="5dp"
-        android:layout_margin="5dp"
-        />
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    >
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".CustomerMapActivity" />
-    <Button
-        android:id="@+id/btn_request"
+        android:layout_height="match_parent">
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".CustomerMapActivity" />
+    </FrameLayout>
+
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="call uber"
-        android:layout_gravity="bottom"
         android:layout_marginBottom="20dp"
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="#100"
-        />
-</FrameLayout>
+        >
+        <Button
+            android:id="@+id/btn_log_out"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Log out"
+            android:padding="5dp"
+            android:layout_margin="5dp"
+            />
+        <Button
+            android:layout_below="@+id/btn_log_out"
+            android:id="@+id/btn_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Setting"
+            android:padding="5dp"
+            android:layout_margin="5dp"
+            />
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20sp"
+            android:layout_below="@+id/btn_setting"
+            >
+            <fragment android:id="@+id/autocomplete_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+                />
+        </android.support.v7.widget.CardView>
+        <LinearLayout
+            android:id="@+id/linear_driver_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="15dp"
+            android:layout_above="@+id/radio_group_services"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            >
+            <!--Image-Profile-->
+            <ImageView
+                android:id="@+id/image_driver_profile"
+                android:layout_width="150sp"
+                android:layout_height="150sp"
+                android:src="@drawable/ic_user_default"
+                android:layout_gravity="center"
+                android:layout_marginRight="20dp"
+                />
+            <!--Info-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+                <!--LayoutName-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="30dp"
+                    >
+                    <TextView
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Name"
+                        android:textStyle="bold"
+                        android:textSize="15sp"
+                        android:textColor="@color/black"
+                        />
+                    <TextView
+                        android:id="@+id/tv_driver_name"
+                        android:layout_weight="3"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:maxLines="2"
+                        android:textColor="@color/black"
+                        />
+
+                </LinearLayout>
+                <!--LayoutPhone-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="30dp"
+                    >
+                    <TextView
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Phone"
+                        android:textStyle="bold"
+                        android:textSize="15sp"
+                        android:textColor="@color/black"
+                        />
+                    <TextView
+                        android:id="@+id/tv_driver_phone"
+                        android:layout_weight="3"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:maxLines="1"
+                        android:textColor="@color/black"
+                        />
+                </LinearLayout>
+                <!--LayoutCar-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+                    <TextView
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Car"
+                        android:textStyle="bold"
+                        android:textSize="15sp"
+                        android:textColor="@color/black"
+                        />
+                    <TextView
+                        android:id="@+id/tv_driver_car"
+                        android:layout_weight="3"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:maxLines="3"
+                        android:ellipsize="marquee"
+                        android:textColor="@color/black"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+        <!--Group-Services-->
+        <RadioGroup
+            android:id="@+id/radio_group_services"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_above="@id/btn_request"
+            >
+            <RadioButton
+                android:id="@+id/radio_button_uber_bike"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bike"
+                android:checked="true"
+                />
+            <RadioButton
+                android:id="@+id/radio_button_uber_bike_premium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bike Premium"
+                />
+            <RadioButton
+                android:id="@+id/radio_button_uber_car"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Car"
+                />
+
+        </RadioGroup>
+        <!--Button-Request-->
+        <Button
+            android:layout_alignParentBottom="true"
+            android:id="@+id/btn_request"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="call uber"
+            android:layout_gravity="bottom"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#100"
+            />
+    </RelativeLayout>
+</RelativeLayout>

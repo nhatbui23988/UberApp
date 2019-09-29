@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.myuberapp">
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -18,7 +18,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity android:name=".HistorySingleActivity"></activity>
+        <activity android:name=".HistoryActivity" />
+        <activity android:name=".DriverSettingActivity" />
+        <activity android:name=".CustomerSettingActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -33,7 +36,7 @@
 
         <activity
             android:name=".CustomerMapActivity"
-            android:label="@string/title_activity_customer_map"></activity>
+            android:label="@string/title_activity_customer_map" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -47,7 +50,6 @@
         <activity
             android:name=".DriverMapActivity"
             android:label="@string/title_activity_driver_map" />
-        <activity android:name=".MapActivity" />
         <activity android:name=".LoginCustomerActivity" />
         <activity android:name=".LoginDriverActivity" />
         <activity android:name=".MainActivity">

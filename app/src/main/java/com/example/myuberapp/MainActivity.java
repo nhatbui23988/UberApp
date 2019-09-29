@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    private Button btnCustomer, btnDriver;
+    private Button btnCustomer, btnDriver, btnTestFunc1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -17,8 +17,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void connectView(){
         btnCustomer = findViewById(R.id.btn_customer);
         btnDriver= findViewById(R.id.btn_driver);
+        btnTestFunc1= findViewById(R.id.btn_test_func1);
         btnDriver.setOnClickListener(this);
         btnCustomer.setOnClickListener(this);
+        btnTestFunc1.setOnClickListener(this);
     }
 
     @Override
@@ -33,7 +35,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_driver:{
                 Intent intent = new Intent(MainActivity.this, LoginDriverActivity.class);
                 startActivity(intent);
-                finish();
+                break;
+            }
+            case R.id.btn_test_func1:{
+                Intent intent = new Intent(MainActivity.this, LoginDriverActivity.class);
+                startActivity(intent);
                 break;
             }
         }
