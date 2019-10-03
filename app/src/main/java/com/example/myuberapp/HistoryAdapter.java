@@ -25,10 +25,10 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.Holder> 
 
     @Override
     public void onBindViewHolder(Holder holder, int position) {
-        HistoryObject historyObject = listHistory.get(position);
+        final HistoryObject historyObject = listHistory.get(position);
         holder.tvCustomerName.setText(historyObject.getCustomerName() != null ? historyObject.getCustomerName():"");
         holder.tvDriverName.setText(historyObject.getDriverName() != null ? historyObject.getDriverName():"");
-        holder.tvComment.setText(historyObject.getComment() != null ? historyObject.getComment() : "");
+//        holder.tvComment.setText(historyObject.getComment() != null ? historyObject.getComment() : "");
         holder.tvRating.setText(historyObject.getRating());
         holder.tvDate.setText(historyObject.getDate());
 
@@ -36,14 +36,14 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.Holder> 
             @Override
             public void onClick(View v) {
                 if (onItemHistoryClick != null){
-                    onItemHistoryClick.onItemClick();
+                    onItemHistoryClick.onItemClick(historyObject);
                 }
             }
         });
     }
 
     interface OnItemHistoryClick{
-        void onItemClick();
+        void onItemClick(HistoryObject historyObject);
     }
     private OnItemHistoryClick onItemHistoryClick;
     public void setOnItemHistoryClick(OnItemHistoryClick onItemHistoryClick){

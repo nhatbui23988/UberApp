@@ -29,7 +29,7 @@ import java.util.Map;
 
 import afu.org.checkerframework.checker.oigj.qual.O;
 
-public class HistoryActivity extends AppCompatActivity {
+public class HistoryActivity extends AppCompatActivity implements UberConstant{
     private RecyclerView rcvHistory;
     private HistoryAdapter adapter;
     private ArrayList<HistoryObject> listHistory;
@@ -93,23 +93,26 @@ public class HistoryActivity extends AppCompatActivity {
         historyRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.e("nhat","dataSnapshot.exists(): "+dataSnapshot.exists());
                 if (dataSnapshot.exists()){
                     Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
                     HistoryObject historyObject = new HistoryObject();
+                    historyObject.setHistoryID(key);
                     if (map.get("customer") != null){
                         historyObject.setCustomerName(map.get("customer").toString());
+                        Log.e("nhat","customer: "+map.get("customer").toString());
                     }
                     if (map.get("driver") != null){
                         historyObject.setDriverName(map.get("driver").toString());
                     }
-                    if (map.get("rating") != null){
+                    if (map.get(NODE_RATING) != null){
                         historyObject.setRating(map.get("rating").toString());
                     }
-                    if (map.get("comment") != null){
+                    if (map.get(NODE_COMMENT) != null){
                         historyObject.setComment(map.get("comment").toString());
                     }
-                    if (map.get("Timestamp") != null){
-                        long timestamp = Long.parseLong(map.get("Timestamp").toString());
+                    if (map.get(NODE_TIMESTAMP) != null){
+                        long timestamp = Long.parseLong(map.get(NODE_TIMESTAMP).toString());
                         historyObject.setDate(getDate(timestamp));
                     }
                     listHistory.add(historyObject);
@@ -125,8 +128,6 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
     private String getDate(long timestamp){
-//        Calendar calendar = Calendar.getInstance(Locale.getDefault());
-//        calendar.setTimeInMillis(timestamp*1000);
         Date date = new Date(timestamp);
         String dateResult = DateFormat.getDateTimeInstance().format(date);
         return dateResult;
@@ -145,6 +146,13 @@ public class HistoryActivity extends AppCompatActivity {
         rcvHistory.setAdapter(adapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         rcvHistory.setLayoutManager(linearLayoutManager);
-
+        adapter.setOnItemHistoryClick(new HistoryAdapter.OnItemHistoryClick() {
+            @Override
+            public void onItemClick(HistoryObject historyObject) {
+                Intent intent = new Intent(HistoryActivity.this, HistorySingleActivity.class);
+                intent.putExtra(KEY_RIDE_ID, historyObject.getHistoryID());
+                startActivity(intent);
+            }
+        });
     }
 }
