@@ -5,38 +5,13 @@
 
     android:layout_height="match_parent"
     android:layout_width="match_parent">
-    <Button
-        android:id="@+id/btn_log_out"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Log out"
-        android:padding="5dp"
-        android:layout_margin="5dp"
-        />
-    <Button
-        android:id="@+id/btn_setting"
-        android:layout_below="@+id/btn_log_out"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Setting"
-        android:padding="5dp"
-        android:layout_margin="5dp"
-        />
-    <Button
-        android:id="@+id/btn_history"
-        android:layout_below="@+id/btn_setting"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="History"
-        android:padding="5dp"
-        android:layout_margin="5dp"
-        />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         >
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -48,6 +23,54 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:context=".DriverMapActivity" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_horizontal"
+                    >
+                    <Button
+                        android:id="@+id/btn_log_out"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Log out"
+                        android:padding="5dp"
+                        android:layout_margin="5dp"
+                        />
+                    <Button
+                        android:id="@+id/btn_setting"
+                        android:layout_below="@+id/btn_log_out"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Setting"
+                        android:padding="5dp"
+                        android:layout_margin="5dp"
+                        />
+                    <Button
+                        android:id="@+id/btn_history"
+                        android:layout_below="@+id/btn_setting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="History"
+                        android:padding="5dp"
+                        android:layout_margin="5dp"
+                        />
+                </LinearLayout>
+                <Switch
+                    android:id="@+id/switch_working"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="working"
+                    android:layout_marginLeft="15dp"
+
+                    />
+            </LinearLayout>
+
         </FrameLayout>
         <!--LayoutInfo-->
         <LinearLayout
