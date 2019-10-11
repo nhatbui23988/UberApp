@@ -1,12 +1,12 @@
 package com.example.myuberapp;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,19 +36,27 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
-public class HistorySingleActivity extends AppCompatActivity implements OnMapReadyCallback, UberConstant, RoutingListener {
+
+
+public class HistorySingleActivity extends AppCompatActivity implements OnMapReadyCallback, UberConstant, RoutingListener, View.OnClickListener {
     private GoogleMap mMap;
     private SupportMapFragment mMapFragment;
-    private TextView tvName, tvDistance, tvPhone, tvFromTo, tvDate;
+    private TextView tvName, tvDistance, tvPhone, tvFromTo, tvDate, tvRating, tvInfoTitle;
     private ImageView imgProfile;
     private RatingBar mRatingBar;
+    private Button btnBack, btnAccept;
+    private LinearLayout layoutRatingForCustomer, layoutRatingForDriver;
 //
     private DatabaseReference historyRideRef;
     private LatLng pickUpLatLng, destinationLatLng;
 //
-    private String rideID = "", userID, customerID = "", driverID = "";
+    private String rideID = "", userID = "", customerID = "", driverID = "", userHistory ="";
     private List<Polyline> polylines;
+    private float ratingValue;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +80,15 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
         tvPhone = findViewById(R.id.tv_history_phone);
         imgProfile = findViewById(R.id.img_history_user_profile);
         mRatingBar = findViewById(R.id.rating_bar);
+        btnAccept = findViewById(R.id.btn_accept);
+        btnBack = findViewById(R.id.btn_back);
+        tvRating = findViewById(R.id.tv_rating);
+        tvInfoTitle = findViewById(R.id.tv_info_title);
+        layoutRatingForCustomer = findViewById(R.id.layout_rating_for_customer);
+        layoutRatingForDriver = findViewById(R.id.layout_rating_for_driver);
+
+        btnAccept.setOnClickListener(this);
+        btnBack.setOnClickListener(this);
         getBaseData();
     }
 
@@ -79,6 +96,17 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
         Intent intent = getIntent();
         if (intent != null){
             rideID = intent.getStringExtra(KEY_RIDE_ID);
+            userHistory = intent.getStringExtra(KEY_DRIVER_OR_CUSTOMER);
+            if (userHistory.equals(NODE_CUSTOMERS)){
+                layoutRatingForDriver.setVisibility(View.GONE);
+                layoutRatingForCustomer.setVisibility(View.VISIBLE);
+                tvInfoTitle.setText("Your Driver Info");
+            }else if (userHistory.equals(NODE_DRIVERS)){
+                mRatingBar.setIsIndicator(true);
+                layoutRatingForDriver.setVisibility(View.VISIBLE);
+                layoutRatingForCustomer.setVisibility(View.GONE);
+                tvInfoTitle.setText("Your Customer Info");
+            }
         }
         Log.e("nhat","ride ID"+rideID);
         userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -100,6 +128,9 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
                     }
                     if (map.get(NODE_DRIVER) != null){
                         driverID = map.get(NODE_DRIVER).toString();
+                    }
+                    if (map.get(NODE_RATING) != null){
+                        tvRating.setText(map.get(NODE_RATING).toString());
                     }
 //                    nếu current user là Customer thì hiển thị thông tin driver
                     if (userID.equals(customerID)){
@@ -123,13 +154,16 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
                         mRatingBar.setRating(Integer.parseInt(map.get(NODE_RATING).toString()));
                     }
                     if (map.get(NODE_LOCATION) != null){
-                        pickUpLatLng = new LatLng(
-                                Double.parseDouble(dataSnapshot.child(NODE_FROM).child(NODE_LAT).toString())
-                                ,Double.parseDouble(dataSnapshot.child(NODE_FROM).child(NODE_LNG).toString()));
-                        destinationLatLng = new LatLng(
-                                Double.parseDouble(dataSnapshot.child(NODE_TO).child(NODE_LAT).toString())
-                                ,Double.parseDouble(dataSnapshot.child(NODE_TO).child(NODE_LNG).toString()) );
-                        getRouteToMaker();
+//                        pickUpLatLng = new LatLng(
+//                                Double.parseDouble(dataSnapshot.child(NODE_FROM).child(NODE_LAT).toString())
+//                                ,Double.parseDouble(dataSnapshot.child(NODE_FROM).child(NODE_LNG).toString()));
+//                        if (dataSnapshot.child(NODE_TO).child(NODE_LAT).exists()){
+//                            destinationLatLng = new LatLng(
+//                                    Double.parseDouble(dataSnapshot.child(NODE_TO).child(NODE_LAT).toString())
+//                                    ,Double.parseDouble(dataSnapshot.child(NODE_TO).child(NODE_LNG).toString()) );
+//                            getRouteToMaker();
+//                        }
+
                     }
                 }
             }
@@ -146,14 +180,7 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
         mRatingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                historyRideRef.child(NODE_RATING).setValue(rating);
-                DatabaseReference driverRatingRef = FirebaseDatabase.getInstance()
-                        .getReference()
-                        .child(NODE_USERS)
-                        .child(NODE_DRIVERS)
-                        .child(driverID)
-                        .child(NODE_RATING);
-                driverRatingRef.child(rideID).setValue(rating);
+                ratingValue = rating;
             }
         });
     }
@@ -261,5 +288,30 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
             lines.remove();
         }
         polylines.clear();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btn_accept:{
+                updateRatingForDriver(ratingValue);
+                break;
+            }
+            case R.id.btn_back:{
+                finish();
+                break;
+            }
+        }
+    }
+
+    private void updateRatingForDriver(float ratingValue) {
+        historyRideRef.child(NODE_RATING).setValue(ratingValue);
+        DatabaseReference driverRatingRef = FirebaseDatabase.getInstance()
+                .getReference()
+                .child(NODE_USERS)
+                .child(NODE_DRIVERS)
+                .child(driverID)
+                .child(NODE_RATING);
+        driverRatingRef.child(rideID).setValue(ratingValue);
     }
 }

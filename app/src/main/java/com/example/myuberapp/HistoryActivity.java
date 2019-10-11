@@ -1,14 +1,8 @@
 package com.example.myuberapp;
 
 import android.content.Intent;
-import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.widget.LinearLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -27,13 +21,18 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import afu.org.checkerframework.checker.oigj.qual.O;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 
 public class HistoryActivity extends AppCompatActivity implements UberConstant{
     private RecyclerView rcvHistory;
     private HistoryAdapter adapter;
     private ArrayList<HistoryObject> listHistory;
     private String userID;
+    private String userHistory;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,9 +45,8 @@ public class HistoryActivity extends AppCompatActivity implements UberConstant{
     private void getHistoryData() {
         listHistory = new ArrayList<>();
         Intent intent = getIntent();
-        String userHistory;
         if (intent!=null){
-            userHistory = intent.getStringExtra("CustomerOrDriver");
+            userHistory = intent.getStringExtra(KEY_DRIVER_OR_CUSTOMER);
             Log.e("nhat","user:"+userHistory);
         }
         else{
@@ -62,10 +60,10 @@ public class HistoryActivity extends AppCompatActivity implements UberConstant{
 //        get node history theo user type và user id
         DatabaseReference historyRef = FirebaseDatabase.getInstance()
                 .getReference()
-                .child("Users")
+                .child(NODE_USERS)
                 .child(userHistory)
                 .child(userID)
-                .child("history");
+                .child(NODE_HISTORY);
 //        kiểm tra hitory
         historyRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -88,7 +86,7 @@ public class HistoryActivity extends AppCompatActivity implements UberConstant{
     private void getDetailHistory(final String key) {
         DatabaseReference historyRef = FirebaseDatabase.getInstance()
                 .getReference()
-                .child("history")
+                .child(NODE_HISTORY)
                 .child(key);
         historyRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -98,18 +96,18 @@ public class HistoryActivity extends AppCompatActivity implements UberConstant{
                     Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
                     HistoryObject historyObject = new HistoryObject();
                     historyObject.setHistoryID(key);
-                    if (map.get("customer") != null){
-                        historyObject.setCustomerName(map.get("customer").toString());
-                        Log.e("nhat","customer: "+map.get("customer").toString());
+                    if (map.get(NODE_CUSTOMER) != null){
+                        historyObject.setCustomerName(map.get(NODE_CUSTOMER).toString());
+                        Log.e("nhat","customer: "+map.get(NODE_CUSTOMER).toString());
                     }
-                    if (map.get("driver") != null){
-                        historyObject.setDriverName(map.get("driver").toString());
+                    if (map.get(NODE_DRIVER) != null){
+                        historyObject.setDriverName(map.get(NODE_DRIVER).toString());
                     }
                     if (map.get(NODE_RATING) != null){
-                        historyObject.setRating(map.get("rating").toString());
+                        historyObject.setRating(map.get(NODE_RATING).toString());
                     }
                     if (map.get(NODE_COMMENT) != null){
-                        historyObject.setComment(map.get("comment").toString());
+                        historyObject.setComment(map.get(NODE_COMMENT).toString());
                     }
                     if (map.get(NODE_TIMESTAMP) != null){
                         long timestamp = Long.parseLong(map.get(NODE_TIMESTAMP).toString());
@@ -144,13 +142,14 @@ public class HistoryActivity extends AppCompatActivity implements UberConstant{
         rcvHistory = findViewById(R.id.rcv_history);
         adapter = new HistoryAdapter(this, listHistory);
         rcvHistory.setAdapter(adapter);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         rcvHistory.setLayoutManager(linearLayoutManager);
         adapter.setOnItemHistoryClick(new HistoryAdapter.OnItemHistoryClick() {
             @Override
             public void onItemClick(HistoryObject historyObject) {
                 Intent intent = new Intent(HistoryActivity.this, HistorySingleActivity.class);
                 intent.putExtra(KEY_RIDE_ID, historyObject.getHistoryID());
+                intent.putExtra(KEY_DRIVER_OR_CUSTOMER, userHistory);
                 startActivity(intent);
             }
         });

@@ -10,9 +10,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Looper;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -62,6 +59,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentActivity;
 
 public class DriverMapActivity extends FragmentActivity implements OnMapReadyCallback,
         View.OnClickListener,
@@ -547,7 +548,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             }
             case R.id.btn_history:{
                 Intent intent = new Intent(DriverMapActivity.this, HistoryActivity.class);
-                intent.putExtra("CustomerOrDriver","Drivers");
+                intent.putExtra(KEY_DRIVER_OR_CUSTOMER,NODE_DRIVERS);
                 startActivity(intent);
                 break;
             }

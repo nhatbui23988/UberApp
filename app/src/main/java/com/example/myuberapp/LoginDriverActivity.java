@@ -1,7 +1,6 @@
 package com.example.myuberapp;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -19,6 +18,8 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class LoginDriverActivity extends AppCompatActivity implements View.OnClickListener {
     private EditText edtEmail, edtPassword;

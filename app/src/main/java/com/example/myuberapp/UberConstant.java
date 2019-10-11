@@ -33,4 +33,9 @@ public interface UberConstant {
 //
     String KEY_DRIVER_OR_CUSTOMER = "DRIVER_OR_CUSTOMER";
     String KEY_RIDE_ID = "RIDE_ID";
+//
+    int AUTOCOMPLETE_REQUEST_CODE = 1;
+//
+    String API_KEY_PLACES = "AIzaSyA9HvOKN4aKGIGQoZhmaw3A0_sFhBroWgc";
+    String API_KEY_DIRECTION = "AIzaSyA9HvOKN4aKGIGQoZhmaw3A0_sFhBroWgc";
 }
