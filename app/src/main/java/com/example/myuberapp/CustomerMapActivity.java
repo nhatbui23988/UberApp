@@ -10,11 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Looper;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -47,7 +43,10 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -62,6 +61,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentActivity;
 
 public class CustomerMapActivity extends FragmentActivity implements OnMapReadyCallback,
         View.OnClickListener,
@@ -297,7 +302,7 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                     //di chuyển camera map đến tọa độ định vị được
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                     //animation zoom
-                    mMap.animateCamera(CameraUpdateFactory.zoomBy(11));
+                    mMap.animateCamera(CameraUpdateFactory.zoomBy(7));
                     if (!isGetDriversAround){
                         getDriversAround();
                     }
@@ -308,6 +313,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
                 Log.e("nhat",""+locationAvailability.toString());
             }
         };
+        if (!Places.isInitialized()) {
+            Places.initialize(getApplicationContext(), API_KEY_PLACES);
+        }
 // Initialize the AutocompleteSupportFragment.
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
@@ -318,17 +326,13 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
 // Set up a PlaceSelectionListener to handle the response.
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
-            public void onPlaceSelected(Place place) {
-                // TODO: Get info about the selected place.
-                destination = place.getName().toString();
-                destinationLatLng = place.getLatLng();
-                Log.e("nhat", "Place: " + place.getName() + ", " + place.getId());
+            public void onPlaceSelected(@NonNull Place place) {
+
             }
 
             @Override
-            public void onError(Status status) {
-                // TODO: Handle the error.
-                Log.e("nhat", "An error occurred: " + status);
+            public void onError(@NonNull Status status) {
+
             }
         });
     }
@@ -385,6 +389,9 @@ public class CustomerMapActivity extends FragmentActivity implements OnMapReadyC
     }
 
     private void goToHistory() {
+        Intent intent = new Intent(CustomerMapActivity.this, HistoryActivity.class);
+        intent.putExtra(KEY_DRIVER_OR_CUSTOMER, NODE_CUSTOMERS);
+        startActivity(intent);
     }
 
     //    chuyen qua man hinh setting thong tin user

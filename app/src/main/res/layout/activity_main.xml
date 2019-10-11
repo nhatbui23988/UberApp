@@ -33,12 +33,6 @@
             android:layout_height="wrap_content"
             android:text="@string/driver"
             />
-        <Button
-            android:id="@+id/btn_test_func1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="test_func1"
-            />
     </LinearLayout>
 
 

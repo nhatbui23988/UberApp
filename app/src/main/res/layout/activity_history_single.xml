@@ -14,100 +14,230 @@
         android:layout_height="250dp"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         />
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="15dp"
+        android:fitsSystemWindows="true"
         >
-        <!--Layout-Info-Ride-->
-        <android.support.v7.widget.CardView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <LinearLayout
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="15dp"
+            >
+            <!--Layout-Info-Ride-->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
-                <TextView
-                    android:id="@+id/tv_history_from_to"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:text="From - To"
-                    android:textSize="16sp"
-                    />
-                <TextView
-                    android:id="@+id/tv_history_distance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:text="Distance"
-                    android:textSize="16sp"
-                    />
-                <TextView
-                    android:id="@+id/tv_history_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:text="Date"
-                    android:textSize="16sp"
-                    />
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
-        <!--Info-Profile-->
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                >
-                <!--Image-Profile-->
-                <ImageView
-                    android:id="@+id/img_history_user_profile"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:src="@drawable/ic_user_default"
-                    />
+                android:layout_height="wrap_content">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginLeft="20dp"
                     >
-                    <!--Name-->
-                    <TextView
-                        android:id="@+id/tv_history_name"
-                        android:layout_width="wrap_content"
+                    <!--Layout-Destination-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
+                        android:orientation="horizontal"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="20dp"
+                            android:text="From - To"
+                            android:textSize="16sp"
+                            android:layout_marginRight="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/tv_history_from_to"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:text="From - To"
+                            android:textSize="16sp"
+                            android:maxLines="2"
+                            />
+
+                    </LinearLayout>
+                    <!--Layout-Distance-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="20dp"
+                            android:text="Distance"
+                            android:textSize="16sp"
+                            android:layout_marginRight="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/tv_history_distance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:text=""
+                            android:textSize="16sp"
+                            />
+
+                    </LinearLayout>
+                    <!--Layout-Date-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="20dp"
+                            android:text="Date"
+                            android:textSize="16sp"
+                            android:layout_marginRight="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/tv_history_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:text=""
+                            android:textSize="16sp"
+                            />
+
+                    </LinearLayout>
+                    <!--Layout-Date-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:id="@+id/layout_rating_for_driver"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:text="Rating"
+                            android:textSize="16sp"
+                            android:layout_marginRight="10dp"
+                            />
+                        <TextView
+                            android:id="@+id/tv_rating"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="20dp"
+                            android:text=""
+                            android:textSize="16sp"
+                            />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+            <!--Info-Profile-->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:layout_marginBottom="10dp"
+                    >
+                    <TextView
+                        android:id="@+id/tv_info_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Info"
+                        android:textSize="25sp"
+                        android:gravity="center"
+                        android:textColor="@color/black"
                         android:layout_marginBottom="20dp"
-                        android:text="Name"
                         />
-                    <!--Phone-->
-                    <TextView
-                        android:id="@+id/tv_history_phone"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+
+                        >
+                        <!--Image-Profile-->
+                        <ImageView
+                            android:id="@+id/img_history_user_profile"
+                            android:layout_width="150dp"
+                            android:layout_height="150dp"
+                            android:src="@drawable/ic_user_default"
+                            />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginLeft="20dp"
+                            >
+                            <!--Name-->
+                            <TextView
+                                android:id="@+id/tv_history_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="20dp"
+                                android:text="Name"
+                                />
+                            <!--Phone-->
+                            <TextView
+                                android:id="@+id/tv_history_phone"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:layout_marginBottom="20dp"
+                                android:text="Phone"
+                                />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+            <LinearLayout
+                android:id="@+id/layout_rating_for_customer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+                <!--Rating-Bar-->
+                <RatingBar
+                    android:id="@+id/rating_bar"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:numStars="5"
+                    android:stepSize="1"
+                    />
+                <!--Layout-Buttons-->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center"
+                    >
+                    <Button
+                        android:id="@+id/btn_back"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
-                        android:layout_marginBottom="20dp"
-                        android:text="Phone"
+                        android:text="Back"
+                        android:textSize="20sp"
+                        android:layout_marginRight="30dp"
+                        />
+                    <Button
+                        android:id="@+id/btn_accept"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Accept"
+                        android:textSize="20sp"
                         />
                 </LinearLayout>
             </LinearLayout>
-        </android.support.v7.widget.CardView>
-        <!--Rating-Bar-->
-        <RatingBar
-            android:id="@+id/rating_bar"
-            android:layout_gravity="center_horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:numStars="5"
-            android:stepSize="1"
-            />
-
-    </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
