@@ -235,7 +235,7 @@
                             android:layout_height="wrap_content"
                             android:numStars="5"
                             android:stepSize="0.1"
-                            android:clickable="false"
+                            android:isIndicator="true"
                             />
                     </LinearLayout>
                 </LinearLayout>
@@ -279,7 +279,7 @@
                                 />
 
                         </LinearLayout>
-                        <!--Layout-Destination-->
+                        <!--Layout-Distance-->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -307,7 +307,7 @@
                                 />
 
                         </LinearLayout>
-                        <!--Layout-Destination-->
+                        <!--Layout-Price-->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -410,7 +410,7 @@
                 android:layout_gravity="bottom"
                 android:paddingTop="15dp"
                 android:paddingBottom="15dp"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="#100"
                 android:visibility="gone"
@@ -425,7 +425,7 @@
                 android:layout_gravity="bottom"
                 android:paddingTop="15dp"
                 android:paddingBottom="15dp"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="#100"
                 />

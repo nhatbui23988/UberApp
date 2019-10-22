@@ -27,8 +27,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.Holder> 
     @Override
     public void onBindViewHolder(Holder holder, int position) {
         final HistoryObject historyObject = listHistory.get(position);
-        holder.tvCustomerName.setText(historyObject.getCustomerName() != null ? historyObject.getCustomerName():"");
-        holder.tvDriverName.setText(historyObject.getDriverName() != null ? historyObject.getDriverName():"");
+        holder.tvCustomerID.setText(historyObject.getCustomerID() != null ? historyObject.getCustomerID():"");
+        holder.tvDriverID.setText(historyObject.getDriverID() != null ? historyObject.getDriverID():"");
 //        holder.tvComment.setText(historyObject.getComment() != null ? historyObject.getComment() : "");
         holder.tvRating.setText(historyObject.getRating());
         holder.tvDate.setText(historyObject.getDate());
@@ -57,15 +57,15 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.Holder> 
     }
 
     public class Holder extends RecyclerView.ViewHolder {
-        private TextView tvDate, tvCustomerName, tvDriverName, tvComment, tvRating;
+        private TextView tvDate, tvCustomerID, tvDriverID, tvComment, tvRating;
         private View view;
         public Holder(View itemView) {
             super(itemView);
             view = itemView;
             tvDate = itemView.findViewById(R.id.tv_history_date);
             tvRating = itemView.findViewById(R.id.tv_history_rating);
-            tvCustomerName = itemView.findViewById(R.id.tv_history_customer_name);
-            tvDriverName = itemView.findViewById(R.id.tv_history_driver_name);
+            tvCustomerID = itemView.findViewById(R.id.tv_history_customer_id);
+            tvDriverID = itemView.findViewById(R.id.tv_history_driver_id);
             tvComment = itemView.findViewById(R.id.tv_history_comment);
         }
         public View getView(){

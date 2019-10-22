@@ -1,6 +1,8 @@
 package com.example.myuberapp;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,7 +22,10 @@ import com.directions.route.RoutingListener;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -44,7 +49,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class HistorySingleActivity extends AppCompatActivity implements OnMapReadyCallback, UberConstant, RoutingListener, View.OnClickListener {
     private GoogleMap mMap;
     private SupportMapFragment mMapFragment;
-    private TextView tvName, tvDistance, tvPhone, tvFromTo, tvDate, tvRating, tvInfoTitle;
+    private TextView tvName, tvDistance, tvPhone, tvFromTo, tvDate, tvRating, tvInfoTitle, tvPrice;
     private ImageView imgProfile;
     private RatingBar mRatingBar;
     private Button btnBack, btnAccept;
@@ -78,6 +83,7 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
         tvDate = findViewById(R.id.tv_history_date);
         tvName = findViewById(R.id.tv_history_name);
         tvPhone = findViewById(R.id.tv_history_phone);
+        tvPrice = findViewById(R.id.tv_history_price);
         imgProfile = findViewById(R.id.img_history_user_profile);
         mRatingBar = findViewById(R.id.rating_bar);
         btnAccept = findViewById(R.id.btn_accept);
@@ -147,8 +153,11 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
                     if (map.get(NODE_DESTINATION) != null){
                         tvFromTo.setText(map.get(NODE_DESTINATION).toString());
                     }
-                    if (map.get(NODE_DESTINATION) != null){
-                        tvFromTo.setText(map.get(NODE_DESTINATION).toString());
+                    if (map.get(NODE_DISTANCE) != null){
+                        tvDistance.setText(map.get(NODE_DISTANCE).toString()+" km");
+                    }
+                    if (map.get(NODE_PRICE) != null){
+                        tvPrice.setText(map.get(NODE_PRICE).toString()+" VND");
                     }
                     if (map.get(NODE_RATING) != null){
                         mRatingBar.setRating(Integer.parseInt(map.get(NODE_RATING).toString()));
@@ -161,7 +170,28 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
 //                            destinationLatLng = new LatLng(
 //                                    Double.parseDouble(dataSnapshot.child(NODE_TO).child(NODE_LAT).toString())
 //                                    ,Double.parseDouble(dataSnapshot.child(NODE_TO).child(NODE_LNG).toString()) );
-//                            getRouteToMaker();
+////                            getRouteToMaker();
+//                            if (mMap != null){
+//                                int height = 100;
+//                                int width = 100;
+//                                BitmapDrawable bitmapdraw = (BitmapDrawable)getResources().getDrawable(R.drawable.location_pin,null);
+//                                Bitmap b = bitmapdraw.getBitmap();
+//                                Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+////                    đặt marker lên map để biết vị trí Driver
+//                                Marker pickupMarker = mMap.addMarker(new MarkerOptions()
+//                                        .position(pickUpLatLng)
+//                                        .title("Your Pick Up Location")
+//                                        .icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
+//
+//                                BitmapDrawable bitmapdraw2 = (BitmapDrawable)getResources().getDrawable(R.drawable.location_pin,null);
+//                                Bitmap b2 = bitmapdraw2.getBitmap();
+//                                Bitmap smallMarker2 = Bitmap.createScaledBitmap(b2, width, height, false);
+////                    đặt marker lên map để biết vị trí Driver
+//                                Marker destinationMarker = mMap.addMarker(new MarkerOptions()
+//                                        .position(destinationLatLng)
+//                                        .title("Your Destination Location")
+//                                        .icon(BitmapDescriptorFactory.fromBitmap(smallMarker2)));
+//                            }
 //                        }
 
                     }
@@ -254,28 +284,28 @@ public class HistorySingleActivity extends AppCompatActivity implements OnMapRea
     //    Tim` duong
     @Override
     public void onRoutingSuccess(ArrayList<Route> route, int shortestRouteIndex) {
-        if (polylines.size() > 0) {
-            for (Polyline poly : polylines) {
-                poly.remove();
-            }
-        }
-
-        polylines = new ArrayList<>();
-        //add route(s) to the map.
-        for (int i = 0; i < route.size(); i++) {
-
-            //In case of more than 5 alternative routes
-            int colorIndex = i % COLORS.length;
-
-            PolylineOptions polyOptions = new PolylineOptions();
-            polyOptions.color(getResources().getColor(COLORS[colorIndex]));
-            polyOptions.width(10 + i * 3);
-            polyOptions.addAll(route.get(i).getPoints());
-            Polyline polyline = mMap.addPolyline(polyOptions);
-            polylines.add(polyline);
-
-            Toast.makeText(getApplicationContext(), "Route " + (i + 1) + ": distance - " + route.get(i).getDistanceValue() + ": duration - " + route.get(i).getDurationValue(), Toast.LENGTH_SHORT).show();
-        }
+//        if (polylines.size() > 0) {
+//            for (Polyline poly : polylines) {
+//                poly.remove();
+//            }
+//        }
+//
+//        polylines = new ArrayList<>();
+//        //add route(s) to the map.
+//        for (int i = 0; i < route.size(); i++) {
+//
+//            //In case of more than 5 alternative routes
+//            int colorIndex = i % COLORS.length;
+//
+//            PolylineOptions polyOptions = new PolylineOptions();
+//            polyOptions.color(getResources().getColor(COLORS[colorIndex]));
+//            polyOptions.width(10 + i * 3);
+//            polyOptions.addAll(route.get(i).getPoints());
+//            Polyline polyline = mMap.addPolyline(polyOptions);
+//            polylines.add(polyline);
+//
+//            Toast.makeText(getApplicationContext(), "Route " + (i + 1) + ": distance - " + route.get(i).getDistanceValue() + ": duration - " + route.get(i).getDurationValue(), Toast.LENGTH_SHORT).show();
+//        }
     }
 
     @Override

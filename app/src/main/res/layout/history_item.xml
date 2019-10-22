@@ -27,7 +27,7 @@
                 android:textStyle="bold"
                 android:layout_marginBottom="10dp"
                 />
-            <!--Customer-Name-->
+            <!--Customer-ID-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -38,22 +38,22 @@
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Customer Name"
+                    android:text="Customer ID"
                     android:textSize="18sp"
                     android:textColor="@color/black"
                     />
                 <TextView
-                    android:id="@+id/tv_history_customer_name"
+                    android:id="@+id/tv_history_customer_id"
                     android:layout_weight="2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="Customer Name"
+                    android:hint="Customer ID"
                     android:textSize="18sp"
                     android:textColor="@color/black"
                     android:maxLines="2"
                     />
             </LinearLayout>
-            <!--Driver-Name-->
+            <!--Driver-ID-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -64,16 +64,16 @@
                     android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Driver Name"
+                    android:text="Driver ID"
                     android:textSize="18sp"
                     android:textColor="@color/black"
                     />
                 <TextView
-                    android:id="@+id/tv_history_driver_name"
+                    android:id="@+id/tv_history_driver_id"
                     android:layout_weight="2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:hint="Driver Name"
+                    android:hint="Driver ID"
                     android:textSize="18sp"
                     android:textColor="@color/black"
                     android:maxLines="2"

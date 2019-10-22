@@ -12,13 +12,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
@@ -97,11 +92,11 @@ public class HistoryActivity extends AppCompatActivity implements UberConstant{
                     HistoryObject historyObject = new HistoryObject();
                     historyObject.setHistoryID(key);
                     if (map.get(NODE_CUSTOMER) != null){
-                        historyObject.setCustomerName(map.get(NODE_CUSTOMER).toString());
+                        historyObject.setCustomerID(map.get(NODE_CUSTOMER).toString());
                         Log.e("nhat","customer: "+map.get(NODE_CUSTOMER).toString());
                     }
                     if (map.get(NODE_DRIVER) != null){
-                        historyObject.setDriverName(map.get(NODE_DRIVER).toString());
+                        historyObject.setDriverID(map.get(NODE_DRIVER).toString());
                     }
                     if (map.get(NODE_RATING) != null){
                         historyObject.setRating(map.get(NODE_RATING).toString());
@@ -130,13 +125,6 @@ public class HistoryActivity extends AppCompatActivity implements UberConstant{
         String dateResult = DateFormat.getDateTimeInstance().format(date);
         return dateResult;
     }
-
-//    public static void main(String[] args){
-//        Date date = new Date(System.currentTimeMillis()*1000);
-//        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm");
-//        String result = dateFormat.format(date);
-//        System.out.println(result);
-//    }
 
     private void connectView() {
         rcvHistory = findViewById(R.id.rcv_history);

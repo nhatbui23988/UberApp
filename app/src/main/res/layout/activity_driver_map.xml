@@ -101,7 +101,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginBottom="30dp"
+                    android:layout_marginBottom="20dp"
                     >
                     <TextView
                         android:layout_weight="1"
@@ -129,7 +129,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginBottom="30dp"
+                    android:layout_marginBottom="20dp"
                     >
                     <TextView
                         android:layout_weight="1"
@@ -165,9 +165,66 @@
                         android:textStyle="bold"
                         android:textSize="15sp"
                         android:textColor="@color/black"
+                        android:layout_marginBottom="20dp"
                         />
                     <TextView
                         android:id="@+id/tv_customer_destination"
+                        android:layout_weight="9"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:maxLines="3"
+                        android:ellipsize="marquee"
+                        android:textColor="@color/black"
+                        />
+                </LinearLayout>
+                <!--Layout-Distance-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+                    <TextView
+                        android:layout_weight="1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Distance"
+                        android:textStyle="bold"
+                        android:textSize="15sp"
+                        android:textColor="@color/black"
+                        android:layout_marginBottom="20dp"
+                        />
+                    <TextView
+                        android:id="@+id/tv_customer_distance"
+                        android:layout_weight="9"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:maxLines="3"
+                        android:ellipsize="marquee"
+                        android:textColor="@color/black"
+                        />
+                </LinearLayout>
+                <!--Layout-Price-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+                    <TextView
+                        android:layout_weight="1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Price"
+                        android:textStyle="bold"
+                        android:textSize="15sp"
+                        android:textColor="@color/black"
+                        android:layout_marginBottom="20dp"
+                        />
+                    <TextView
+                        android:id="@+id/tv_customer_price"
                         android:layout_weight="9"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"

@@ -2,8 +2,8 @@ package com.example.myuberapp;
 
 public class HistoryObject {
     private String historyID;
-    private String driverName;
-    private String customerName;
+    private String driverID;
+    private String customerID;
     private String comment;
     private String rating;
     private String date;
@@ -16,10 +16,10 @@ public class HistoryObject {
         this.date = date;
     }
 
-    public HistoryObject(String historyID, String driverName, String customerName, String comment, String rating, String date) {
+    public HistoryObject(String historyID, String driverID, String customerID, String comment, String rating, String date) {
         this.historyID = historyID;
-        this.driverName = driverName;
-        this.customerName = customerName;
+        this.driverID = driverID;
+        this.customerID = customerID;
         this.comment = comment;
         this.rating = rating;
         this.date = date;
@@ -37,20 +37,20 @@ public class HistoryObject {
         this.historyID = historyID;
     }
 
-    public String getDriverName() {
-        return driverName;
+    public String getDriverID() {
+        return driverID;
     }
 
-    public void setDriverName(String driverName) {
-        this.driverName = driverName;
+    public void setDriverID(String driverID) {
+        this.driverID = driverID;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public String getCustomerID() {
+        return customerID;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public void setCustomerID(String customerID) {
+        this.customerID = customerID;
     }
 
     public String getComment() {

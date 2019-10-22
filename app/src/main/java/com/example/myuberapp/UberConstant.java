@@ -1,6 +1,9 @@
 package com.example.myuberapp;
 
 public interface UberConstant {
+//
+    String NODE_STORE_IMAGE = "profile_images";
+//
     String NODE_USERS ="Users";
     String NODE_CUSTOMERS = "Customers";
     String NODE_DRIVERS = "Drivers";
@@ -20,7 +23,12 @@ public interface UberConstant {
     String NODE_RATING = "rating";
     String NODE_COMMENT = "comment";
 //
+    String NODE_CUSTOMER_RIDE_ID = "customerRideID";
     String NODE_DESTINATION= "destination";
+    String NODE_DESTINATION_LAT= "destinationLat";
+    String NODE_PICKUP_LAT= "pickupLat";
+    String NODE_PICKUP_LNG= "pickupLng";
+    String NODE_DESTINATION_LNG= "destinationLng";
     String NODE_LOCATION = "location";
     String PUT_NODE_FROM_LAT = "location/from/lat";
     String PUT_NODE_FROM_LNG = "location/from/lng";
@@ -30,6 +38,8 @@ public interface UberConstant {
     String NODE_TO = "to";
     String NODE_LAT = "lat";
     String NODE_LNG = "lng";
+    String NODE_DISTANCE = "distance";
+    String NODE_PRICE = "price";
 //
     String KEY_DRIVER_OR_CUSTOMER = "DRIVER_OR_CUSTOMER";
     String KEY_RIDE_ID = "RIDE_ID";
@@ -38,4 +48,10 @@ public interface UberConstant {
 //
     String API_KEY_PLACES = "AIzaSyA9HvOKN4aKGIGQoZhmaw3A0_sFhBroWgc";
     String API_KEY_DIRECTION = "AIzaSyA9HvOKN4aKGIGQoZhmaw3A0_sFhBroWgc";
+//
+    double DEFAULT_DESTINATION_LAT = 10.7736267;
+    double DEFAULT_DESTINATION_LNG = 106.6581727;
+    String DEFAULT_DESTINATION = "Home";
+    double DEFAULT_PRICE_PER_KM = 3500;
+    double DEFAULT_FIRST_KM = 7000;
 }

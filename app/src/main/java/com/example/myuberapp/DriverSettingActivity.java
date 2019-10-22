@@ -37,7 +37,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class DriverSettingActivity extends AppCompatActivity implements View.OnClickListener {
+public class DriverSettingActivity extends AppCompatActivity implements View.OnClickListener, UberConstant {
     private static final int REQUEST_CODE_CHOOSE_IMAGE = 1;
     //    View
     private EditText edtName, edtPhoneNumber, edtCar;
@@ -83,8 +83,9 @@ public class DriverSettingActivity extends AppCompatActivity implements View.OnC
         driverRef = FirebaseDatabase
                 .getInstance()
                 .getReference()
-                .child("Users")
-                .child("Drivers").child(userID);
+                .child(NODE_USERS)
+                .child(NODE_DRIVERS)
+                .child(userID);
 //        Event nếu data trên Firebase đc cập nhật thì cập nhật lên UI
         driverRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -92,23 +93,23 @@ public class DriverSettingActivity extends AppCompatActivity implements View.OnC
 //              nếu user tồn tại, và đã có thông tin user thì get thông tin đưa lên EditText
                 if (dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
                     Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                    if (map.get("name") != null){
-                        userName = map.get("name").toString();
+                    if (map.get(NODE_NAME) != null){
+                        userName = map.get(NODE_NAME).toString();
                         Log.e("nhat","userName: "+userName);
                         edtName.setText(userName);
                     }
-                    if (map.get("phone") != null){
-                        userPhone = map.get("phone").toString();
+                    if (map.get(NODE_PHONE) != null){
+                        userPhone = map.get(NODE_PHONE).toString();
                         Log.e("nhat","userPhone: "+userPhone);
                         edtPhoneNumber.setText(userPhone);
                     }
-                    if (map.get("car") != null){
-                        userPhone = map.get("phone").toString();
+                    if (map.get(NODE_CAR) != null){
+                        userCar = map.get(NODE_CAR).toString();
                         Log.e("nhat","userPhone: "+userCar);
                         edtCar.setText(userCar);
                     }
-                    if (map.get("service") != null){
-                        userService = map.get("service").toString();
+                    if (map.get(NODE_SERVICE) != null){
+                        userService = map.get(NODE_SERVICE).toString();
                         switch (userService){
                             case "Bike":{
                                 rdGroupService.check(R.id.radio_button_uber_bike);
@@ -124,8 +125,8 @@ public class DriverSettingActivity extends AppCompatActivity implements View.OnC
                             }
                         }
                     }
-                    if (map.get("profileImageUrl") != null){
-                        userProfileImageURL = map.get("profileImageUrl").toString();
+                    if (map.get(NODE_PROFILE_IMAGE_URL) != null){
+                        userProfileImageURL = map.get(NODE_PROFILE_IMAGE_URL).toString();
                         Log.e("nhat","url: "+userProfileImageURL);
                         Glide.with(getApplicationContext())
                                 .load(userProfileImageURL)
@@ -202,10 +203,10 @@ private String userService;
             userCar= edtCar.getText().toString();
 //            update name, phone to Firebase
             Map<String, Object> userInfo = new HashMap<>();
-            userInfo.put("name",userName);
-            userInfo.put("phone",userPhone);
-            userInfo.put("car",userCar);
-            userInfo.put("service",userService);
+            userInfo.put(NODE_NAME,userName);
+            userInfo.put(NODE_PHONE,userPhone);
+            userInfo.put(NODE_CAR,userCar);
+            userInfo.put(NODE_SERVICE,userService);
             driverRef.updateChildren(userInfo);
 
             if (resultImageUri != null){
@@ -221,7 +222,7 @@ private String userService;
         final StorageReference filePath = FirebaseStorage
                 .getInstance()
                 .getReference()
-                .child("profile_images")
+                .child(NODE_STORE_IMAGE)
                 .child(userID);
         Bitmap bitmap = null;
 //                dùng content resolver để truy xuất thông tin của image
@@ -255,7 +256,7 @@ private String userService;
                     public void onSuccess(Uri uri) {
                         Uri downloadUri = uri;
                         Map newImage = new HashMap();
-                        newImage.put("profileImageUrl", downloadUri.toString());
+                        newImage.put(NODE_PROFILE_IMAGE_URL, downloadUri.toString());
                         driverRef.updateChildren(newImage);
                         Log.e("nhat","getDownloadUrl onSuccess");
                         finish();

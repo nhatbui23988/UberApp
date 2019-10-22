@@ -33,8 +33,14 @@
             android:value="@string/google_maps_key" />
 
         <activity
+            android:name=".DriverMapsActivity"
+            android:label="@string/title_activity_driver_maps"></activity>
+        <activity
+            android:name=".CustomerMapsActivity"
+            android:label="@string/title_activity_maps" />
+        <activity
             android:name=".MapActivity"
-            android:label="@string/title_activity_map"></activity>
+            android:label="@string/title_activity_map" />
 
         <service
             android:name=".OnAppKilled"

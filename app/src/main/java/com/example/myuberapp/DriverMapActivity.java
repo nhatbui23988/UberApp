@@ -81,12 +81,12 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     private Marker pickUpMarker;
     private SupportMapFragment mapFragment;
     private Button btnLogOut, btnSetting, btnStatus, btnHistory;
-    private TextView tvCustomerName, tvCustomerPhone, tvCustomerDestination;
+    private TextView tvCustomerName, tvCustomerPhone, tvCustomerDestination, tvCustomerDistance, tvCustomerPrice;
     private ImageView imageCustomerProfile;
     private LinearLayout linearCustomerInfo;
     private Switch workingSwitch;
 //
-    private String customerID = "", destination = "";
+    private String customerID = "", destination = "", driverID = "";
     private boolean isLogOut = false;
     private int status = 0;
     private LatLng destinationLaLng;
@@ -117,9 +117,16 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         super.onResume();
         if (mLocationCallback == null)
             setUpDriverConnect();
+        if (mMap != null){
+            mMap.animateCamera(CameraUpdateFactory.zoomBy(12));
+        }
     }
 
     private void setUpDriverConnect() {
+        driverID = FirebaseAuth
+                .getInstance()
+                .getCurrentUser()
+                .getUid();
 //        setLocation cần add geoFireListener, có thể dùng new geoFireListener
         geoFireListener = new GeoFire.CompletionListener() {
 
@@ -135,7 +142,10 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             public void onLocationResult(LocationResult locationResult) {
                 for (Location location : locationResult.getLocations()) {
                     lastLocation = location;
-                    updateDriverLocation(location, 11);
+                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                    //di chuyển camera map đến tọa độ định vị được
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                    //animation zoom
 //                  lấy id customer gửi request nếu có
                     getAssignedCustomer();
                     updateDriverState(location);
@@ -149,30 +159,20 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         };
     }
 
-    private void updateDriverLocation(Location location, int zoomValue) {
-        //lấy tọa độ nhận được
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        //di chuyển camera map đến tọa độ định vị được
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        //animation zoom
-        mMap.animateCamera(CameraUpdateFactory.zoomBy(zoomValue));
-    }
-
     private void updateDriverState(Location location) {
         //Lấy ID của tài xế
-        String userID = FirebaseAuth.getInstance().getUid();
         //tạo node driverAvailable
         DatabaseReference availableRef = FirebaseDatabase
                 .getInstance()
-                .getReference("driverAvailable");
+                .getReference(NODE_DRIVER_AVAILABLE);
         //tạo node driverWorking
         DatabaseReference workingRef = FirebaseDatabase
                 .getInstance()
-                .getReference("driverWorking");
+                .getReference(NODE_DRIVER_WORKING);
         GeoFire geoFireAvailable = new GeoFire(availableRef);
         GeoFire geoFireWorking = new GeoFire(workingRef);
         //set tọa độ của tài xế lên FireBase
-        if (userID != null) {
+        if (driverID != null) {
 //                        nếu không có khách -> customerID == null
 //                                                  -> rảnh -> available
 //                        nếu có khách -> customerID != null
@@ -180,18 +180,18 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
             switch (customerID) {
                 case "": { //->không có khách
 //                                rảnh -> remove ID bên working
-                    geoFireWorking.removeLocation(userID, geoFireListener);
+                    geoFireWorking.removeLocation(driverID, geoFireListener);
 //                                ->Thêm ID bên driver available (Rảnh)
-                    geoFireAvailable.setLocation(userID
+                    geoFireAvailable.setLocation(driverID
                             , new GeoLocation(location.getLatitude(), location.getLongitude())
                             , geoFireListener);
                     break;
                 }
                 default: { //!= null -> có khách
 //                                -> bận chạy -> remove ID bên available
-                    geoFireAvailable.removeLocation(userID, geoFireListener);
+                    geoFireAvailable.removeLocation(driverID, geoFireListener);
 //                                ->Thêm ID bên driver working (đã bận, đã nhận khách )
-                    geoFireWorking.setLocation(userID
+                    geoFireWorking.setLocation(driverID
                             , new GeoLocation(location.getLatitude(), location.getLongitude())
                             , geoFireListener);
                     break;
@@ -209,6 +209,8 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         tvCustomerName = findViewById(R.id.tv_customer_name);
         tvCustomerPhone = findViewById(R.id.tv_customer_phone);
         tvCustomerDestination = findViewById(R.id.tv_customer_destination);
+        tvCustomerDistance = findViewById(R.id.tv_customer_distance);
+        tvCustomerPrice = findViewById(R.id.tv_customer_price);
         imageCustomerProfile = findViewById(R.id.image_customer_profile);
         linearCustomerInfo = findViewById(R.id.linear_customer_info);
 //
@@ -222,14 +224,13 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     //  Lấy thông tin customer hiện thị lên
     private void getAssignedCustomerInfo() {
-//        get user ID
-//        get ref customers+currentID
         linearCustomerInfo.setVisibility(View.VISIBLE);
         DatabaseReference customerRef = FirebaseDatabase
                 .getInstance()
                 .getReference()
-                .child("Users")
-                .child("Customers").child(customerID);
+                .child(NODE_USERS)
+                .child(NODE_CUSTOMERS)
+                .child(customerID);
 //        Event nếu data trên Firebase đc cập nhật thì cập nhật lên UI
         customerRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -237,15 +238,15 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 //              nếu user tồn tại, và đã có thông tin user thì get thông tin đưa lên EditText
                 if (dataSnapshot.exists() && dataSnapshot.getChildrenCount() > 0) {
                     Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                    if (map.get("name") != null) {
-                        tvCustomerName.setText(map.get("name").toString());
+                    if (map.get(NODE_NAME) != null) {
+                        tvCustomerName.setText(map.get(NODE_NAME).toString());
                     }
-                    if (map.get("phone") != null) {
-                        tvCustomerPhone.setText(map.get("phone").toString());
+                    if (map.get(NODE_PHONE) != null) {
+                        tvCustomerPhone.setText(map.get(NODE_PHONE).toString());
                     }
-                    if (map.get("profileImageUrl") != null) {
+                    if (map.get(NODE_PROFILE_IMAGE_URL) != null) {
                         Glide.with(getApplicationContext())
-                                .load(map.get("profileImageUrl").toString())
+                                .load(map.get(NODE_PROFILE_IMAGE_URL).toString())
                                 .error(R.drawable.ic_user_default)
                                 .into(imageCustomerProfile);
                     }
@@ -262,18 +263,14 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 
     private void getAssignedCustomer() {
 //        Tìm đến ID Driver hiện tại
-        String driverID = FirebaseAuth
-                .getInstance()
-                .getCurrentUser()
-                .getUid();
         DatabaseReference assignCustomerRef = FirebaseDatabase
                 .getInstance()
                 .getReference()
-                .child("Users")
-                .child("Drivers")
+                .child(NODE_USERS)
+                .child(NODE_DRIVERS)
                 .child(driverID)
-                .child("customerRequest")
-                .child("customerRideID");
+                .child(NODE_CUSTOMER_REQUEST)
+                .child(NODE_CUSTOMER_RIDE_ID);
 //        Truy cập vào node bên trong của Driver
 //        nếu có khách bắt xe của mình -> lấy ID khách đó và tìm đến vị trí của khách
         assignCustomerRef.addValueEventListener(new ValueEventListener() {
@@ -305,17 +302,13 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     }
 
     private void getAssignedCustomerDestination() {
-        String driverID = FirebaseAuth
-                .getInstance()
-                .getCurrentUser()
-                .getUid();
         DatabaseReference assignCustomerRef = FirebaseDatabase
                 .getInstance()
                 .getReference()
-                .child("Users")
-                .child("Drivers")
+                .child(NODE_USERS)
+                .child(NODE_DRIVERS)
                 .child(driverID)
-                .child("customerRequest");
+                .child(NODE_CUSTOMER_REQUEST);
 //        Truy cập vào node bên trong của Driver -> customerRequest -> destination -> lấy tên địa điểm để đón
         assignCustomerRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -323,19 +316,24 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                 if (dataSnapshot.exists()) {
 //                    đã có khách
                     Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                    if (map.get("destination") != null){
-                        destination = dataSnapshot.getValue().toString();
+                    if (map.get(NODE_DESTINATION) != null){
+                        destination = map.get(NODE_DESTINATION).toString();
                         tvCustomerDestination.setText(destination);
                     }else {
                         destination = "";
                         tvCustomerDestination.setText("");
                     }
-
+                    if (map.get(NODE_DISTANCE) != null){
+                        tvCustomerDistance.setText(map.get(NODE_DISTANCE).toString()+ "km");
+                    }
+                    if (map.get(NODE_PRICE) != null){
+                        tvCustomerPrice.setText(map.get(NODE_PRICE).toString()+" VND");
+                    }
                     Double destinationLat = 0.0;
                     Double destinationLng = 0.0;
-                    if (map.get("destinationLat") != null && map.get("destinationLng") != null){
-                        destinationLat = Double.parseDouble(map.get("destinationLat").toString());
-                        destinationLng = Double.parseDouble(map.get("destinationLng").toString());
+                    if (map.get(NODE_DESTINATION_LAT) != null && map.get(NODE_DESTINATION_LNG) != null){
+                        destinationLat = Double.parseDouble(map.get(NODE_DESTINATION_LAT).toString());
+                        destinationLng = Double.parseDouble(map.get(NODE_DESTINATION_LNG).toString());
                         destinationLaLng = new LatLng(destinationLat, destinationLng);
                     }
                 }
@@ -353,24 +351,25 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
         assignCustomerPickupLocationRef = FirebaseDatabase
                 .getInstance()
                 .getReference()
-                .child("customerRequest")
-                .child(customerID)
-                .child("l");
+                .child(NODE_USERS)
+                .child(NODE_DRIVERS)
+                .child(driverID)
+                .child(NODE_CUSTOMER_REQUEST);
         assignedCustomerPickupLocationListener = assignCustomerPickupLocationRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists() && !TextUtils.isEmpty(customerID)) {
-                    List<Object> map = (List<Object>) dataSnapshot.getValue();
+                    Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
                     double locationLat = 0;
                     double locationLng = 0;
-                    if (map.get(0) != null) {
-                        locationLat = Double.parseDouble(map.get(0).toString());
+                    if (map.get(NODE_PICKUP_LAT) != null) {
+                        locationLat = Double.parseDouble(map.get(NODE_PICKUP_LAT).toString());
                     }
-                    if (map.get(1) != null) {
-                        locationLng = Double.parseDouble(map.get(1).toString());
+                    if (map.get(NODE_PICKUP_LNG) != null) {
+                        locationLng = Double.parseDouble(map.get(NODE_PICKUP_LNG).toString());
                     }
-                    int height = 150;
-                    int width = 150;
+                    int height = 100;
+                    int width = 100;
                     BitmapDrawable bitmapdraw = (BitmapDrawable)getResources().getDrawable(R.drawable.location_pin  ,null);
                     Bitmap b = bitmapdraw.getBitmap();
                     Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
@@ -380,7 +379,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
                             .title("Pickup Location")
                             .icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
                     );
-                    getRouteToMaker(pickupLaLng);
+//                    getRouteToMaker(pickupLaLng);
                 }
             }
 
@@ -405,7 +404,7 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
+        mMap.animateCamera(CameraUpdateFactory.zoomBy(12));
         locationRequest = new LocationRequest();
         locationRequest.setInterval(10000);
         locationRequest.setFastestInterval(10000);
@@ -432,17 +431,14 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     protected void onStart() {
         super.onStart();
-//        if(!checkPermissions()){
-//            startLocationPermissionRequest();
-//        }
-//        checkLocationPermission();
     }
+
 
     @Override
     protected void onStop() {
         super.onStop();
         if (!isLogOut){
-//            driverDisconnect();
+            driverDisconnect();
         }
     }
 
@@ -560,12 +556,12 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
 //        Nhận khách
             case 0: {
                 status = 1;
-                removePolylines();
-                if (destinationLaLng != null){
-                    if (destinationLaLng.latitude != 0.0 && destinationLaLng.longitude != 0.0) {
-                        getRouteToMaker(destinationLaLng);
-                    }
-                }
+//                removePolylines();
+//                if (destinationLaLng != null){
+//                    if (destinationLaLng.latitude != 0.0 && destinationLaLng.longitude != 0.0) {
+//                        getRouteToMaker(destinationLaLng);
+//                    }
+//                }
 
                 btnStatus.setText("Drive completed");
                 break;
@@ -581,60 +577,60 @@ public class DriverMapActivity extends FragmentActivity implements OnMapReadyCal
     }
 
     private void recordRide() {
-        String userID = FirebaseAuth.getInstance()
-                .getCurrentUser()
-                .getUid();
         DatabaseReference driverRef = FirebaseDatabase.getInstance()
                 .getReference()
-                .child("Users")
-                .child("Drivers")
-                .child(userID)
-                .child("history");
+                .child(NODE_USERS)
+                .child(NODE_DRIVERS)
+                .child(driverID)
+                .child(NODE_HISTORY);
         DatabaseReference customerRef = FirebaseDatabase.getInstance()
                 .getReference()
-                .child("Users")
-                .child("Customers")
+                .child(NODE_USERS)
+                .child(NODE_CUSTOMERS)
                 .child(customerID)
-                .child("history");
+                .child(NODE_HISTORY);
         DatabaseReference historyRef = FirebaseDatabase.getInstance()
                 .getReference()
-                .child("history");
+                .child(NODE_HISTORY);
         String requestID = historyRef.push().getKey();
         if (requestID != null){
             driverRef.child(requestID).setValue(true);
             customerRef.child(requestID).setValue(true);
+
 // lưu thông tin chuyến đi vào lịch sử
             HashMap map = new HashMap();
-            map.put("driver", userID);
-            map.put("customer", customerID);
-            map.put("rating", 0);
-            map.put("comment", "");
+            map.put(NODE_DRIVER, driverID);
+            map.put(NODE_CUSTOMER, customerID);
+            map.put(NODE_RATING, 0);
+            map.put(NODE_COMMENT, "");
             map.put(NODE_TIMESTAMP, System.currentTimeMillis());
-            map.put(NODE_DESTINATION, destination);
+            map.put(NODE_DESTINATION, DEFAULT_DESTINATION);
+            if (!TextUtils.isEmpty(tvCustomerDistance.getText().toString()))
+                map.put(NODE_DISTANCE, tvCustomerDistance.getText().toString());
+            if (!TextUtils.isEmpty(tvCustomerPrice.getText().toString()))
+                map.put(NODE_PRICE, tvCustomerPrice.getText().toString());
             map.put(PUT_NODE_FROM_LAT, pickupLaLng.latitude);
             map.put(PUT_NODE_FROM_LNG, pickupLaLng.longitude);
-//            map.put(PUT_NODE_TO_LAT, destinationLaLng.latitude);
-//            map.put(PUT_NODE_TO_LNG, destinationLaLng.longitude);
-//            map.put("driverName", driverRef.child("name").getKey());
-//            map.put("customerName", customerRef.child("name").getKey());
+            map.put(PUT_NODE_TO_LAT, destinationLaLng.latitude);
+            map.put(PUT_NODE_TO_LNG, destinationLaLng.longitude);
             historyRef.child(requestID).updateChildren(map);
         }
     }
 
     //Từ chối đón khách
     private void endRequest() {
-        btnStatus.setText("End pickup");
-        removePolylines();
+        btnStatus.setText("No Customer");
+//        removePolylines();
 //      remove node customerRequest ben trong driver
         String driverID = FirebaseAuth.getInstance()
                 .getCurrentUser()
                 .getUid();
         DatabaseReference driverRef = FirebaseDatabase.getInstance()
                 .getReference()
-                .child("Users")
-                .child("Drivers")
+                .child(NODE_USERS)
+                .child(NODE_DRIVERS)
                 .child(driverID)
-                .child("customerRequest");
+                .child(NODE_CUSTOMER_REQUEST);
         driverRef.removeValue();
 //      remove node customerRequest co ID = customerID
         DatabaseReference customerRequestRef = FirebaseDatabase.getInstance()

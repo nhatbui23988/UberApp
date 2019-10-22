@@ -36,7 +36,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class CustomerSettingActivity extends AppCompatActivity implements View.OnClickListener {
+public class CustomerSettingActivity extends AppCompatActivity implements View.OnClickListener, UberConstant {
     private static final int REQUEST_CODE_CHOOSE_IMAGE = 1;
     //    View
     private EditText edtName, edtPhoneNumber;
@@ -81,8 +81,9 @@ public class CustomerSettingActivity extends AppCompatActivity implements View.O
         customerRef = FirebaseDatabase
                 .getInstance()
                 .getReference()
-                .child("Users")
-                .child("Customers").child(userID);
+                .child(NODE_USERS)
+                .child(NODE_CUSTOMERS)
+                .child(userID);
 //        Event nếu data trên Firebase đc cập nhật thì cập nhật lên UI
         customerRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -90,18 +91,18 @@ public class CustomerSettingActivity extends AppCompatActivity implements View.O
 //              nếu user tồn tại, và đã có thông tin user thì get thông tin đưa lên EditText
                 if (dataSnapshot.exists() && dataSnapshot.getChildrenCount()>0){
                     Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                    if (map.get("name") != null){
-                        userName = map.get("name").toString();
+                    if (map.get(NODE_NAME) != null){
+                        userName = map.get(NODE_NAME).toString();
                         Log.e("nhat","userName: "+userName);
                         edtName.setText(userName);
                     }
-                    if (map.get("phone") != null){
-                        userPhone = map.get("phone").toString();
+                    if (map.get(NODE_PHONE) != null){
+                        userPhone = map.get(NODE_PHONE).toString();
                         Log.e("nhat","userPhone: "+userPhone);
                         edtPhoneNumber.setText(userPhone);
                     }
-                    if (map.get("profileImageUrl") != null){
-                        userProfileImageURL = map.get("profileImageUrl").toString();
+                    if (map.get(NODE_PROFILE_IMAGE_URL) != null){
+                        userProfileImageURL = map.get(NODE_PROFILE_IMAGE_URL).toString();
                         Log.e("nhat","url: "+userProfileImageURL);
                         Glide.with(getApplicationContext())
                                 .load(userProfileImageURL)
@@ -169,8 +170,8 @@ public class CustomerSettingActivity extends AppCompatActivity implements View.O
             userPhone= edtPhoneNumber.getText().toString();
 //            update name, phone to Firebase
             Map<String, Object> userInfo = new HashMap<>();
-            userInfo.put("name",userName);
-            userInfo.put("phone",userPhone);
+            userInfo.put(NODE_NAME,userName);
+            userInfo.put(NODE_PHONE,userPhone);
             customerRef.updateChildren(userInfo);
 
             if (resultImageUri != null){
@@ -178,7 +179,7 @@ public class CustomerSettingActivity extends AppCompatActivity implements View.O
                 final StorageReference filePath = FirebaseStorage
                         .getInstance()
                         .getReference()
-                        .child("profile_images")
+                        .child(NODE_STORE_IMAGE)
                         .child(userID);
                 Bitmap bitmap = null;
 //                dùng content resolver để truy xuất thông tin của image
@@ -212,7 +213,7 @@ public class CustomerSettingActivity extends AppCompatActivity implements View.O
                             public void onSuccess(Uri uri) {
                                 Uri downloadUri = uri;
                                 Map newImage = new HashMap();
-                                newImage.put("profileImageUrl", downloadUri.toString());
+                                newImage.put(NODE_PROFILE_IMAGE_URL, downloadUri.toString());
                                 customerRef.updateChildren(newImage);
                                 Log.e("nhat","getDownloadUrl onSuccess");
                                 finish();
